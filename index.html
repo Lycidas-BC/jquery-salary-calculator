@@ -5,24 +5,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <source src="jquery-3.6.0.min.js"></source>
-    <source src="script.js"></source>
+    <script src="jquery.js"></script>
+    <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>jQuery Salary Calculator</title>
 </head>
 <body>
     <h1>Salary Calculator</h1>
-    <h2>Add Employee</h2>
-    <h3>
-        <input id="firstNameIn" placeholder="First Name">
-        <input id="lastNameIn" placeholder="Last Name">
-        <input id="idIn" placeholder="ID">
-        <input id="titleIn" placeholder="Title">
-        <input id="annualSalaryIn" placeholder="Annual Salary">
-    </h3>
-    <h3>
-        <button>Submit</button>
-    </h3>
+    <section id="addEmployeeSection">
+        <h2>Add Employee</h2>
+        <h3>
+            <input id="firstNameIn" placeholder="First Name">
+            <input id="lastNameIn" placeholder="Last Name">
+            <input id="idNumberIn" placeholder="ID">
+            <input id="jobTitleIn" placeholder="Title">
+            <input id="annualSalaryIn" placeholder="Annual Salary">
+        </h3>
+        <h3>
+            <button id="submitButton">Submit</button>
+        </h3>
+    </section>
+    <section id="employeesTableSection">
+        <table id="employeesTable" style="width:100%">
+            <thead id="employeesTableHeader">
+                <tr>
+                    <th id="firstNameColumn">First Name</th>
+                    <th id="lastNameColumn">Last Name</th> 
+                    <th id="idNumberColumn">ID</th>
+                    <th id="jobTitleColumn">Title</th>
+                    <th id="annualSalaryColumn">Annual Salary</th> 
+                    <th id="deleteButtonColumn">Delete?</th>
+                </tr>
+            </thead>
+            <tbody id="employeesTableBody"></tbody>
+        </table>
+    </section>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 </body>
 </html>
