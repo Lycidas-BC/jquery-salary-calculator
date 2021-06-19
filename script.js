@@ -5,7 +5,7 @@ const employeesList = [];
 //create global for sorting table - default: lastName
 let sortTableBy = "lastNameDESCENDING";
 
-/*A 'Submit' button should collect the form information, store the information to calculate monthly costs, append information to the DOM and clear the input fields. Using the stored information, calculate monthly costs and append this to the to DOM. If the total monthly cost exceeds $20,000, add a red background color to the total monthly cost.
+/*
 
 Create a delete button that removes an employee from the DOM. For Base mode, it does **not** need to remove that Employee's salary from the reported total.*/
 
@@ -89,8 +89,10 @@ function doSort() {
 
 function populateEmployeesTable() {
     let el = $( "#employeesTableBody" );
+    let totalMonthlyCost = 0;
     el.empty();
     for (const employee of employeesList) {
+        totalMonthlyCost += Number(employee.annualSalary)/12;
         el.append(
             `<tr>
                 <td>${employee.firstName}</td>
@@ -102,6 +104,17 @@ function populateEmployeesTable() {
             </tr>`
         )
     }
+    el.append(
+        `<tr></tr>
+        <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total Monthly: </td>
+                <td ${(totalMonthlyCost > 20000) ? "style='background-color: red;'": ""} >$${(Math.round(totalMonthlyCost*100)/100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                <td></td>
+        </tr>`
+    )
 } //end populateEmployeesTable
 
 /**
