@@ -57,21 +57,33 @@ function setSort() {
 
 function doSort() {
     // determine whether to sort in ASCENDING or DESCENDING order of sort column
-    let upOrDown = sortTableBy.indexOf("ASCENDING") > -1;
-    if (upOrDown) {
+    let ascendingOrDescending = sortTableBy.indexOf("ASCENDING") > -1;
+    if (ascendingOrDescending) {
         let sortColumn = sortTableBy.replace("ASCENDING","");
-        employeesList.sort(function(a, b) {
-            const textA = a[sortColumn].toUpperCase();
-            const textB = b[sortColumn].toUpperCase();
-            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+        if (sortColumn === 'annualSalary') {
+            employeesList.sort(function(a, b) {
+                return Number(a[sortColumn]) - Number(b[sortColumn]);
         });
+        } else {
+            employeesList.sort(function(a, b) {
+                const textA = a[sortColumn].toUpperCase();
+                const textB = b[sortColumn].toUpperCase();
+                return (textA < textB) ? 1 : (textA > textB) ? -1 : 0;
+            });
+        }
     } else {
         let sortColumn = sortTableBy.replace("DESCENDING","");
-        employeesList.sort(function(a, b) {
-            const textA = a[`${sortColumn}`].toUpperCase();
-            const textB = b[`${sortColumn}`].toUpperCase();
-            return (textA < textB) ? 1 : (textA > textB) ? -1 : 0;
-        });
+        if (sortColumn === 'annualSalary') {
+            employeesList.sort(function(a, b) {
+                return Number(b[sortColumn]) - Number(a[sortColumn]);
+            });
+        } else {
+            employeesList.sort(function(a, b) {
+                const textA = a[`${sortColumn}`].toUpperCase();
+                const textB = b[`${sortColumn}`].toUpperCase();
+                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+            });
+        }
     }
 } //end doSort
 
@@ -85,7 +97,7 @@ function populateEmployeesTable() {
                 <td>${employee.lastName}</td>
                 <td>${employee.idNumber}</td>
                 <td>${employee.jobTitle}</td>
-                <td>${employee.annualSalary}</td>
+                <td>$${employee.annualSalary.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                 <td><button>Delete</button></td>
             </tr>`
         )
