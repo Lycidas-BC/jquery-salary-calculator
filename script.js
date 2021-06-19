@@ -5,55 +5,58 @@ const employeesList = [];
 //create global for sorting table - default: lastName
 let sortTableBy = "lastNameDESCENDING";
 
-/*
+/*Create a delete button that removes an employee from the DOM. For Base mode, it does **not** need to remove that Employee's salary from the reported total.*/
 
-Create a delete button that removes an employee from the DOM. For Base mode, it does **not** need to remove that Employee's salary from the reported total.*/
-
-/**
- * readyNow runs in the background as soon as document loads - listens for events and calls the relevant functions accordingly
- */
-function readyNow() {
-    $( "#submitButton" ).on("click", addEmployee );
-    $( "#employeesTableHeader" ).on("click", "th", setSort );
-} //end readyNow
+//functions listed in alphabetical order
 
 function addEmployee(){
-    // construct new employee object
-    let newEmployee = new employeeConstructor(
-        $( "#firstNameIn" ).val(),
-        $( "#lastNameIn" ).val(),
-        $( "#idNumberIn" ).val(),
-        $( "#jobTitleIn" ).val(),
-        $( "#annualSalaryIn" ).val(),
-    );
-
-    // add to employeesList array
-    employeesList.push(newEmployee);
-    
-    // sort employeesList array by current sortTableBy
-    doSort();
-
-    // populate table from EmployeesList array
-    populateEmployeesTable();
-
-    // empty inputs
-    $( "#firstNameIn" ).val("");
-    $( "#lastNameIn" ).val("");
-    $( "#idNumberIn" ).val("");
-    $( "#jobTitleIn" ).val("");
-    $( "#annualSalaryIn" ).val("");
-} //end addEmployee
-
-function setSort() {
-    //update what column to sort employees by
-    //the employee property name is the same as the header id with the word Column removed from the end
-    //click column header again to reverse order - use UP or DOWN to keep track
-    if (this.id !== deleteButtonColumn) {
-        sortTableBy = (sortTableBy.indexOf("ASCENDING") > -1) ? this.id.replace("Column","DESCENDING") : this.id.replace("Column","ASCENDING");
-        doSort();
-        populateEmployeesTable();
+    // enforce ID uniqueness by refusing to add duplicate ID numbers
+    let alreadyInArray = false;
+    $( "#warning" ).remove();
+    for (const employee of employeesList){
+        if (employee.idNumber === $( "#idNumberIn" ).val()){
+            alreadyInArray = true;
+            break;
+        }
     }
-} //end setSort
+    
+    if (alreadyInArray) {
+        // if ID number is already in array, display warning and do not add employee
+        $( "#addEmployeeSection" ).append( `<h2 id="warning" style="color:red">ID number ${$( "#idNumberIn" ).val()} is already in the table. Please ensure you have the correct ID and try again.</h2>` );
+    } else if (isNaN($( "#annualSalaryIn" ).val()) || $( "#annualSalaryIn" ).val()==="" ) {
+        // if annualSalary field is not a number, display warning and do not add employee
+        $( "#addEmployeeSection" ).append( `<h2 id="warning" style="color:red">Annual salary ${$( "#annualSalaryIn" ).val()} is not a valid salary. please enter a number and try again.</h2>` );
+    } else {
+        // construct new employee object
+        let newEmployee = new employeeConstructor(
+            $( "#firstNameIn" ).val(),
+            $( "#lastNameIn" ).val(),
+            $( "#idNumberIn" ).val(),
+            $( "#jobTitleIn" ).val(),
+            $( "#annualSalaryIn" ).val(),
+        );
+
+        // add to employeesList array
+        employeesList.push(newEmployee);
+        
+        // sort employeesList array by current sortTableBy
+        doSort();
+
+        // populate table from EmployeesList array
+        populateEmployeesTable();
+
+        // empty inputs
+        $( "#firstNameIn" ).val("");
+        $( "#lastNameIn" ).val("");
+        $( "#idNumberIn" ).val("");
+        $( "#jobTitleIn" ).val("");
+        $( "#annualSalaryIn" ).val("");
+    }
+    } //end addEmployee
+
+function deleteRow() {
+    
+} //end deleteRow
 
 function doSort() {
     // determine whether to sort in ASCENDING or DESCENDING order of sort column
@@ -87,6 +90,25 @@ function doSort() {
     }
 } //end doSort
 
+/**
+ * constructs employee object
+ * @param {string} firstName 
+ * @param {string} lastName 
+ * @param {number} idNumber 
+ * @param {string} jobTitle 
+ * @param {number} annualSalary 
+ */
+ function employeeConstructor(firstName, lastName, idNumber, jobTitle, annualSalary) {
+    let employee = {
+        firstName : firstName,
+        lastName : lastName,
+        idNumber : idNumber,
+        jobTitle : jobTitle,
+        annualSalary : annualSalary
+    };
+    return employee;
+} //end employeeConstructor
+
 function populateEmployeesTable() {
     let el = $( "#employeesTableBody" );
     let totalMonthlyCost = 0;
@@ -100,7 +122,7 @@ function populateEmployeesTable() {
                 <td>${employee.idNumber}</td>
                 <td>${employee.jobTitle}</td>
                 <td>$${employee.annualSalary.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                <td><button>Delete</button></td>
+                <td><button class="deleteButton">Delete</button></td>
             </tr>`
         )
     }
@@ -118,31 +140,21 @@ function populateEmployeesTable() {
 } //end populateEmployeesTable
 
 /**
- * constructs employee object
- * @param {string} firstName 
- * @param {string} lastName 
- * @param {number} idNumber 
- * @param {string} jobTitle 
- * @param {number} annualSalary 
+ * readyNow runs in the background as soon as document loads - listens for events and calls the relevant functions accordingly
  */
-function employeeConstructor(firstName, lastName, idNumber, jobTitle, annualSalary) {
-    let employee = {
-        firstName : firstName,
-        lastName : lastName,
-        idNumber : idNumber,
-        jobTitle : jobTitle,
-        annualSalary : annualSalary
-    };
-    return employee;
-} //end employeeConstructor
+ function readyNow() {
+    $( "#submitButton" ).on("click", addEmployee );
+    $( "#employeesTableHeader" ).on("click", "th", setSort );
+    $( "#employeesTableBody" ).on("click",".deleteButton", deleteRow);
+} //end readyNow
 
-
-
-/* just grabbing some IDs to avoid having to switch back and forth - will delete this comment later
-    id="firstNameIn" placeholder="First Name"
-    id="lastNameIn" placeholder="Last Name"
-    id="idNumberIn" placeholder="ID"
-    id="jobTitleIn" placeholder="Title"
-    id="annualSalaryIn" placeholder="Annual Salary"
-    id="submitButton"
-    id="employeesTable"*/
+function setSort() {
+    //update what column to sort employees by
+    //the employee property name is the same as the header id with the word Column removed from the end
+    //click column header again to reverse order - use UP or DOWN to keep track
+    if (this.id !== deleteButtonColumn) {
+        sortTableBy = (sortTableBy.indexOf("ASCENDING") > -1) ? this.id.replace("Column","DESCENDING") : this.id.replace("Column","ASCENDING");
+        doSort();
+        populateEmployeesTable();
+    }
+} //end setSort
