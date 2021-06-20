@@ -5,7 +5,8 @@ const employeesList = [];
 //create global for sorting table - default: lastName
 let sortTableBy = "lastNameDESCENDING";
 
-//functions listed in alphabetical order
+//FUNCTIONS LISTED IN ALPHABETICAL ORDER
+
 /**
  * add Employee: pushes new employee object onto employeesList array, if ID Number is unique and Annual Salary is a valid number. Sorts the list and populates the table.
  */
@@ -22,10 +23,10 @@ function addEmployee(){
     
     if (alreadyInArray) {
         // if ID number is already in array, display warning and do not add employee
-        $( "#addEmployeeSection" ).append( `<h2 id="warning" style="color:red">ID number ${$( "#idNumberIn" ).val()} is already in the table. Please ensure you have the correct ID and try again.</h2>` );
+        $( "#addEmployeeSection" ).append( `<h4 id="warning" style="color:red">ID number ${$( "#idNumberIn" ).val()} is already in the table. Please ensure you have the correct ID and try again.</h4>` );
     } else if (isNaN($( "#annualSalaryIn" ).val()) || $( "#annualSalaryIn" ).val()==="" ) {
         // if annualSalary field is not a number, display warning and do not add employee
-        $( "#addEmployeeSection" ).append( `<h2 id="warning" style="color:red">Annual salary ${$( "#annualSalaryIn" ).val()} is not a valid salary. please enter a number and try again.</h2>` );
+        $( "#addEmployeeSection" ).append( `<h4 id="warning" style="color:red">Annual salary ${$( "#annualSalaryIn" ).val()} is not a valid salary. please enter a number and try again.</h4>` );
     } else {
         // construct new employee object
         let newEmployee = new employeeConstructor(
@@ -78,7 +79,7 @@ function doSort() {
         let sortColumn = sortTableBy.replace("ASCENDING","");
         if (sortColumn === 'annualSalary') {
             employeesList.sort(function(a, b) {
-                return Number(a[sortColumn]) - Number(b[sortColumn]);
+                return Number(b[sortColumn]) - Number(a[sortColumn]);
         });
         } else {
             employeesList.sort(function(a, b) {
@@ -91,7 +92,7 @@ function doSort() {
         let sortColumn = sortTableBy.replace("DESCENDING","");
         if (sortColumn === 'annualSalary') {
             employeesList.sort(function(a, b) {
-                return Number(b[sortColumn]) - Number(a[sortColumn]);
+                return Number(a[sortColumn]) - Number(b[sortColumn]);
             });
         } else {
             employeesList.sort(function(a, b) {
@@ -143,8 +144,7 @@ function populateEmployeesTable() {
         )
     }
     el.append(
-        `<tr></tr>
-        <tr>
+        `<tr id="totalMonthlyCost">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -172,7 +172,7 @@ function setSort() {
     //the employee property name is the same as the header id with the word Column removed from the end
     //click column header again to reverse order - use UP or DOWN to keep track
     if (this.id !== deleteButtonColumn) {
-        sortTableBy = (sortTableBy === this.id.replace("Column","ASCENDING")) ? this.id.replace("Column","DESCENDING") : this.id.replace("Column","ASCENDING");
+        sortTableBy = (sortTableBy === this.id.replace("Column","DESCENDING")) ? this.id.replace("Column","ASCENDING") : this.id.replace("Column","DESCENDING");
         doSort();
         populateEmployeesTable();
     }
