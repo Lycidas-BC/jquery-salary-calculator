@@ -55,7 +55,14 @@ function addEmployee(){
     } //end addEmployee
 
 function deleteRow() {
-    
+    // get idNumber corresponding to delete button that was clicked
+    const employeeName = $($(this.closest("tr")).children()[0]).text() + " " + $($(this.closest("tr")).children()[1]).text();
+    const deleteID = $(this.closest("tr")).find(".idNumber").text();
+    if (window.confirm(`Are you sure you want to remove ${employeeName} (ID: ${deleteID}) from the table?`)){
+        const deleteIndex = employeesList.findIndex(x => x.idNumber === deleteID);
+        employeesList.splice(deleteIndex, 1);
+        populateEmployeesTable();
+    }
 } //end deleteRow
 
 function doSort() {
@@ -119,7 +126,7 @@ function populateEmployeesTable() {
             `<tr>
                 <td>${employee.firstName}</td>
                 <td>${employee.lastName}</td>
-                <td>${employee.idNumber}</td>
+                <td class="idNumber">${employee.idNumber}</td>
                 <td>${employee.jobTitle}</td>
                 <td>$${employee.annualSalary.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                 <td><button class="deleteButton">Delete</button></td>
