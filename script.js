@@ -5,10 +5,10 @@ const employeesList = [];
 //create global for sorting table - default: lastName
 let sortTableBy = "lastNameDESCENDING";
 
-/*Create a delete button that removes an employee from the DOM. For Base mode, it does **not** need to remove that Employee's salary from the reported total.*/
-
 //functions listed in alphabetical order
-
+/**
+ * add Employee: pushes new employee object onto employeesList array, if ID Number is unique and Annual Salary is a valid number. Sorts the list and populates the table.
+ */
 function addEmployee(){
     // enforce ID uniqueness by refusing to add duplicate ID numbers
     let alreadyInArray = false;
@@ -54,6 +54,9 @@ function addEmployee(){
     }
     } //end addEmployee
 
+/**
+ * deleteRow() - confirms that user wants to delete a row from the table. If yes, performs the deletion.
+ */
 function deleteRow() {
     // get idNumber corresponding to delete button that was clicked
     const employeeName = $($(this.closest("tr")).children()[0]).text() + " " + $($(this.closest("tr")).children()[1]).text();
@@ -65,6 +68,9 @@ function deleteRow() {
     }
 } //end deleteRow
 
+/**
+ * doSort() - sorts employeesList array by key stored in sortTableBy
+ */
 function doSort() {
     // determine whether to sort in ASCENDING or DESCENDING order of sort column
     let ascendingOrDescending = sortTableBy.indexOf("ASCENDING") > -1;
@@ -116,6 +122,9 @@ function doSort() {
     return employee;
 } //end employeeConstructor
 
+/**
+ * populateEmployeesTable() - turns employeesList from array into html table
+ */
 function populateEmployeesTable() {
     let el = $( "#employeesTableBody" );
     let totalMonthlyCost = 0;
@@ -155,12 +164,15 @@ function populateEmployeesTable() {
     $( "#employeesTableBody" ).on("click",".deleteButton", deleteRow);
 } //end readyNow
 
+/**
+ * setSort() - if users click a column header, sort rows by that column; if they click it again, reverse the order
+ */
 function setSort() {
     //update what column to sort employees by
     //the employee property name is the same as the header id with the word Column removed from the end
     //click column header again to reverse order - use UP or DOWN to keep track
     if (this.id !== deleteButtonColumn) {
-        sortTableBy = (sortTableBy.indexOf("ASCENDING") > -1) ? this.id.replace("Column","DESCENDING") : this.id.replace("Column","ASCENDING");
+        sortTableBy = (sortTableBy === this.id.replace("Column","ASCENDING")) ? this.id.replace("Column","DESCENDING") : this.id.replace("Column","ASCENDING");
         doSort();
         populateEmployeesTable();
     }
